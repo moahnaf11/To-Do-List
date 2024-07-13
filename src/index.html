@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="project">
+            <h1 class="project-title">Projects</h1>
+            <button class="addproject">Add Project</button>
+        </div>
+
+        <div class="tasks">
+            <h1>Tasks</h1>
+            <button class="addtask">Add Task</button>
+            <button class="viewalltask">View All tasks</button>
+        </div>
+
+
+    </div>
+
+    <div class="content">
+        <h1 class="header">My To Do List</h1>
+        <div class="display">
+            <h1 class="display-title">No Projects yet</h1>
+            <div class="display-child">
+
+            </div>
+        </div>
+    </div>
+
+
+    <dialog class="project-dialog dialogs">
+        <form action="" method="dialog" class="form-1">
+            <div class="project-title">
+                <label for="projectName">Project Name
+                    <span>*</span>
+                </label>
+                <input type="text" id="projectName" placeholder="Name" required>
+            </div>
+            <div class="project-description">
+                <label for="projectDescription">Description</label>
+                <textarea name="description" id="projectDescription" placeholder="Description"></textarea>
+            </div>
+            <div class="button-container">
+                <button type="submit">submit</button>
+                <button type="reset">reset</button>
+                <button class="close" type="button">close</button>
+            </div>
+        </form>
+    </dialog>
+
+
+    <dialog class="task-dialog dialogs">
+        <form action="" class="form-2" method="dialog">
+            <div>
+                <label for="title">Title
+                    <span>*</span>
+                </label>
+                <input type="text" id="title" placeholder="Title" required>
+            </div>
+
+            <div>
+                <label for="description">Description
+                    <span>*</span>
+                </label>
+                <input type="text" id="description" placeholder="Description" required>
+            </div>
+            <div>
+                <label for="date">Due Date
+                    <span>*</span>
+                </label>
+                <input type="date" id="date" required>
+            </div>
+            <div>
+                <label for="priority">priority
+                    <span>*</span>
+                </label>
+                <select name="priority" id="priority" required>
+                    <option value="Normal">Normal</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="projectMenu">Project
+                    <span>*</span>
+                </label>
+                <select name="" id="projectMenu">
+
+                </select>
+            </div>
+
+            <div class="button-container">
+                <button type="submit">submit</button>
+                <button type="reset">reset</button>
+                <button class="close" type="button">close</button>
+            </div>
+        </form>
+
+
+    </dialog>
+    
+</body>
+</html>
