@@ -1,3 +1,4 @@
+import { projectUpdate } from "../src/index";
 let dialog1 = document.querySelector(".project-dialog");
 let closeButton = dialog1.querySelector(".close");
 let cardClass = 0;
@@ -6,10 +7,13 @@ let form1 = dialog1.querySelector(".form-1");
 let projectDescription = form1.querySelector("textarea");
 let projectTitleText = form1.querySelector("#projectName");
 let displayTitle = document.querySelector(".display-title");
+let index;
+
+
 
 
 function ProjectButtonClick (e, projectCard) {
-    let index = projectCard.className.split(" ")[1].split("-")[1];
+    index = projectCard.className.split(" ")[1].split("-")[1];
     let target = e.target.classList.value;
     switch (target) {
         case "remove":
@@ -17,8 +21,13 @@ function ProjectButtonClick (e, projectCard) {
             projectCard.remove();
             break;
         
-        case "edit":
-            toDo.editProject()
+        case "update":
+            projectUpdate = true;
+            displayDialog(dialog1, form1);
+
+
+        case "view":
+
     } 
 
 }
@@ -37,8 +46,34 @@ export class ToDo {
 
     }
 
-    editProject() {
-        displayDialog();
+    updateProject() {
+        let projectCard = document.querySelector(`.card-${index}`);
+        let position = index;
+        this.projects[position].title = projectTitleText.value;
+        let header = projectCard.querySelector("h1");
+        header.textContent = projectTitleText.value;
+        if (projectDescription.value) {
+            this.projects[position].description = projectDescription.value;
+            let descriptionContainer = projectCard.querySelector(".description-container");
+            if (descriptionContainer) {
+                let descriptionText = projectCard.querySelector(".description-text");
+                descriptionText.textContent = projectDescription.value;
+            }   else {
+                let taskContainer = projectCard.querySelector(".task-container");
+                taskContainer.style.flexGrow = "0";
+                let buttonContainer = projectCard.querySelector(".button-container");
+                projectCard.append(header, createProjectDescription(), taskContainer, buttonContainer);
+            }
+
+        }   else {
+            let descriptionContainer = projectCard.querySelector(".description-container");
+            descriptionContainer.remove();
+            let taskContainer = projectCard.querySelector(".task-container");
+            taskContainer.style.flexGrow = "1";
+        }
+    }
+
+    viewProject() {
 
 
     }
@@ -48,10 +83,10 @@ export class ToDo {
 export let toDo = new ToDo(); 
 
 export class Project {
-    constructor(title, description, task=0) {
+    constructor(title, description) {
         this.title = title;
         this.description = description;
-        this.task = task;
+        this.task = [];
     }
 
 }
@@ -82,6 +117,26 @@ function createCard () {
     return appendDivsInCard(projectCard)
 }
 
+
+function createProjectDescription () {
+    
+    let descriptionContainer = document.createElement("div");
+    descriptionContainer.classList.add("description-container");
+    let descriptionLabel = document.createElement("div");
+    descriptionLabel.classList.add(".label");
+    descriptionLabel.textContent = "Description:"
+    let descriptionText = document.createElement("div");
+    descriptionText.classList.add("description-text");
+    descriptionText.textContent = projectDescription.value;
+    descriptionContainer.append(descriptionLabel, descriptionText);
+
+    return descriptionContainer;
+
+}
+    
+    
+
+
 function appendDivsInCard (projectCard) {
     let projectObject = new Project(projectTitleText.value, projectDescription.value)
     toDo.projects.push(projectObject);
@@ -94,27 +149,22 @@ function appendDivsInCard (projectCard) {
     taskLabel.textContent = "Tasks:"
     let taskNumber = document.createElement("div");
     taskNumber.classList.add("task-number");
-    taskNumber.textContent = projectObject.task;
+    taskNumber.textContent = projectObject.task.length;
     taskContainer.append(taskLabel, taskNumber);
     let cardButtonContainer = document.createElement("div");
     cardButtonContainer.classList.add("button-container");
     let removeButton = document.createElement("button");
-    let editButton = document.createElement("button");
-    editButton.textContent = "Edit";
-    editButton.classList.add("edit");
+    let updateButton = document.createElement("button");
+    updateButton.textContent = "Update";
+    updateButton.classList.add("update");
+    let viewButton = document.createElement("button");
+    viewButton.textContent = "view";
+    viewButton.classList.add("view");
     removeButton.classList.add("remove");
-    cardButtonContainer.append(removeButton, editButton);
+    cardButtonContainer.append(removeButton, viewButton, updateButton);
     removeButton.textContent = "Remove";
     if (projectDescription.value !== "") {
-        let descriptionContainer = document.createElement("div");
-        descriptionContainer.classList.add("description-container");
-        let descriptionLabel = document.createElement("div");
-        descriptionLabel.classList.add(".label");
-        descriptionLabel.textContent = "Description:"
-        let descriptionText = document.createElement("div");
-        descriptionText.classList.add("description-text");
-        descriptionText.textContent = projectObject.description;
-        descriptionContainer.append(descriptionLabel, descriptionText);
+        let descriptionContainer = createProjectDescription();
 
         projectCard.append(titleDiv, descriptionContainer, taskContainer, cardButtonContainer);
     }   else {
@@ -135,8 +185,12 @@ form1.addEventListener("submit", projectformSubmission)
 export function projectformSubmission (e) {
     e.preventDefault();
     closeDialog(dialog1);
+    if (!projectUpdate) {
+        addProject();
+    }   else {
+        toDo.updateProject();
+    }
     
-    addProject();
 }
 
 
