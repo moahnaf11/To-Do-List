@@ -1,15 +1,29 @@
 import { projectUpdate } from "../src/index";
+import { viewAllProjectButton } from "../src/index";
+import { TaskButtonDialog } from "./tasks";
+import { taskCardClick } from "./tasks";
+import { taskUpdate } from "./tasks";
+
 let dialog1 = document.querySelector(".project-dialog");
 let closeButton = dialog1.querySelector(".close");
 let cardClass = 0;
-let displayScreen = document.querySelector(".display-child");
+export let displayScreen = document.querySelector(".display-child");
 let form1 = dialog1.querySelector(".form-1");
 let projectDescription = form1.querySelector("textarea");
 let projectTitleText = form1.querySelector("#projectName");
 let displayTitle = document.querySelector(".display-title");
-let index;
+export let index;
 
+export let mainContainer = document.querySelector(".display");
 
+export function allProjectsDisplay () {
+    displayScreen.style.display = "flex";
+    let taskDisplay = document.querySelectorAll(".task-display");
+    taskDisplay.forEach(displays => {
+        displays.style.display = "none";
+    })
+    displayTitle.textContent = "your projects";
+}
 
 
 function ProjectButtonClick (e, projectCard) {
@@ -18,15 +32,31 @@ function ProjectButtonClick (e, projectCard) {
     switch (target) {
         case "remove":
             toDo.deleteProject(index);
+            let displayTask = document.querySelector(`.project-${index}`);
+            displayTask.remove();
             projectCard.remove();
             break;
         
         case "update":
             projectUpdate = true;
             displayDialog(dialog1, form1);
+            break;
 
 
         case "view":
+            displayScreen.style.display = "none";
+            let taskDisplay = document.querySelector(`.project-${index}`);
+            mainContainer.appendChild(taskDisplay);
+            taskDisplay.style.display = "flex";
+            displayTitle.textContent = `${toDo.projects[index].title} tasks`;
+            break;
+
+        case "addtask":
+            taskUpdate = false;
+            TaskButtonDialog();
+            break;
+
+
 
     } 
 
@@ -72,12 +102,6 @@ export class ToDo {
             taskContainer.style.flexGrow = "1";
         }
     }
-
-    viewProject() {
-
-
-    }
-
 }
 
 export let toDo = new ToDo(); 
@@ -87,6 +111,7 @@ export class Project {
         this.title = title;
         this.description = description;
         this.task = [];
+        this.taskIndex = -1;
     }
 
 }
@@ -113,6 +138,12 @@ function createCard () {
     projectCard.addEventListener("click", (e) => ProjectButtonClick(e, projectCard));
     projectCard.classList.add("card")
     projectCard.classList.add(`card-${cardClass}`);
+    let taskDisplay = document.createElement("div");
+    taskDisplay.classList.add("task-display");
+    taskDisplay.classList.add(`project-${cardClass}`);
+    taskDisplay.addEventListener("click", (e) => taskCardClick(e, taskDisplay));
+    mainContainer.append(taskDisplay);
+    taskDisplay.style.display = "none";
     ++cardClass;
     return appendDivsInCard(projectCard)
 }
@@ -138,7 +169,7 @@ function createProjectDescription () {
 
 
 function appendDivsInCard (projectCard) {
-    let projectObject = new Project(projectTitleText.value, projectDescription.value)
+    let projectObject = new Project(projectTitleText.value, projectDescription.value);
     toDo.projects.push(projectObject);
     let titleDiv = document.createElement("h1");
     titleDiv.textContent = projectObject.title;
@@ -161,8 +192,11 @@ function appendDivsInCard (projectCard) {
     viewButton.textContent = "view";
     viewButton.classList.add("view");
     removeButton.classList.add("remove");
-    cardButtonContainer.append(removeButton, viewButton, updateButton);
-    removeButton.textContent = "Remove";
+    let addTaskButton = document.createElement("button");
+    addTaskButton.classList.add("addtask");
+    addTaskButton.textContent = "Add";
+    cardButtonContainer.append(removeButton, viewButton, updateButton, addTaskButton);
+    removeButton.textContent = "x";
     if (projectDescription.value !== "") {
         let descriptionContainer = createProjectDescription();
 
@@ -177,6 +211,10 @@ function appendDivsInCard (projectCard) {
 function addProject () {
     displayTitle.textContent = "your projects";
     displayScreen.appendChild(createCard());
+    if (displayScreen.style.display == "none") {
+        allProjectsDisplay();
+
+    }
 
 }
 

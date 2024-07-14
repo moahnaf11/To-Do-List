@@ -15,7 +15,6 @@
 
         <div class="tasks">
             <h1>Tasks</h1>
-            <button class="addtask">Add Task</button>
             <button class="viewalltask">View All tasks</button>
         </div>
 
@@ -56,26 +55,26 @@
 
     <dialog class="task-dialog dialogs">
         <form action="" class="form-2" method="dialog">
-            <div>
+            <div class="title">
                 <label for="title">Title
                     <span>*</span>
                 </label>
                 <input type="text" id="title" placeholder="Title" required>
             </div>
 
-            <div>
+            <div class="description">
                 <label for="description">Description
                     <span>*</span>
                 </label>
                 <input type="text" id="description" placeholder="Description" required>
             </div>
-            <div>
+            <div class="date">
                 <label for="date">Due Date
                     <span>*</span>
                 </label>
                 <input type="date" id="date" required>
             </div>
-            <div>
+            <div class="priority">
                 <label for="priority">priority
                     <span>*</span>
                 </label>
@@ -83,15 +82,6 @@
                     <option value="Normal">Normal</option>
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="projectMenu">Project
-                    <span>*</span>
-                </label>
-                <select name="" id="projectMenu">
-
                 </select>
             </div>
 
