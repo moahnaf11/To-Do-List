@@ -1,6 +1,5 @@
 import { ToDo, Project, toDo, displayDialog, closeDialog, displayScreen, taskDisplay, mainContainer, index } from "./addproject";
-import { format, parseISO } from 'date-fns';
-
+import { format, parseISO, isBefore, isAfter, addMonths } from 'date-fns';
 
 let addTaskButton = document.querySelector(".addtask");
 let viewAllTaskButton = document.querySelector(".viewalltask");
@@ -64,10 +63,6 @@ function editTask () {
     }   else {
         taskCard.style.borderLeft = "10px solid green";
     }
-
-
-
-
 }
 
 
@@ -101,7 +96,6 @@ function createTaskCard () {
         }
     })
     taskNumber.textContent = count;
-
 }
 
  export function taskCardClick (e, taskDisplay) {

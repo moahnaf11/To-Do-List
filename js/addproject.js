@@ -1,7 +1,8 @@
 import { projectUpdate } from "../src/index";
 import { viewAllProjectButton } from "../src/index";
 import { TaskButtonDialog, taskCardClick, taskUpdate } from "./tasks";
-import { allTaskContainer } from "./taskdisplay";
+
+
 
 
 let dialog1 = document.querySelector(".project-dialog");
@@ -18,11 +19,14 @@ export let mainContainer = document.querySelector(".display");
 
 export function allProjectsDisplay () {
     displayScreen.style.display = "flex";
+    let allTaskContainer = document.querySelector(".alltasks");
     allTaskContainer.style.display = "none";
+    let thisMonthContainer = document.querySelector(".mymonth");
+    thisMonthContainer.style.display = "none";
     let taskDisplay = document.querySelectorAll(".task-display");
     taskDisplay.forEach(displays => {
         displays.style.display = "none";
-    
+
     })
     displayTitle.textContent = "your projects";
 }
@@ -73,7 +77,7 @@ export class ToDo {
         this.projects[index] = "";
         if (this.projects.every((item) => item === "")) {
             displayTitle.textContent = "No Projects yet";
-        } 
+        }
 
 
     }
@@ -217,6 +221,7 @@ function addProject () {
         allProjectsDisplay();
 
     }
+
 
 }
 
