@@ -1,13 +1,14 @@
 import { projectUpdate } from "../src/index";
 import { viewAllProjectButton } from "../src/index";
 import { TaskButtonDialog, taskCardClick, taskUpdate } from "./tasks";
+import { saveToLocalStorage } from "./storage";
 
 
 
 
 let dialog1 = document.querySelector(".project-dialog");
 let closeButton = dialog1.querySelector(".close");
-let cardClass = 0;
+export let cardClass = 0;
 export let displayScreen = document.querySelector(".display-child");
 let form1 = dialog1.querySelector(".form-1");
 let projectDescription = form1.querySelector("textarea");
@@ -32,7 +33,7 @@ export function allProjectsDisplay () {
 }
 
 
-function ProjectButtonClick (e, projectCard) {
+export function ProjectButtonClick (e, projectCard) {
     index = projectCard.className.split(" ")[1].split("-")[1];
     let target = e.target.classList.value;
     switch (target) {
@@ -78,6 +79,7 @@ export class ToDo {
         if (this.projects.every((item) => item === "")) {
             displayTitle.textContent = "No Projects yet";
         }
+        saveToLocalStorage('toDo', toDo);
 
 
     }
@@ -107,6 +109,7 @@ export class ToDo {
             let taskContainer = projectCard.querySelector(".task-container");
             taskContainer.style.flexGrow = "1";
         }
+        saveToLocalStorage('toDo', toDo);
     }
 }
 
@@ -139,7 +142,7 @@ export function closeDialog (dialogs) {
 }
 
 
-function createCard () {
+export function createCard () {
     let projectCard = document.createElement("div");
     projectCard.addEventListener("click", (e) => ProjectButtonClick(e, projectCard));
     projectCard.classList.add("card")
@@ -217,6 +220,7 @@ function appendDivsInCard (projectCard) {
 function addProject () {
     displayTitle.textContent = "your projects";
     displayScreen.appendChild(createCard());
+    saveToLocalStorage('toDo', toDo);
     if (displayScreen.style.display == "none") {
         allProjectsDisplay();
 

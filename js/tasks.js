@@ -1,5 +1,6 @@
 import { ToDo, Project, toDo, displayDialog, closeDialog, displayScreen, taskDisplay, mainContainer, index } from "./addproject";
 import { format, parseISO, isBefore, isAfter, addMonths } from 'date-fns';
+import { saveToLocalStorage } from "./storage";
 
 let addTaskButton = document.querySelector(".addtask");
 let viewAllTaskButton = document.querySelector(".viewalltask");
@@ -63,6 +64,7 @@ function editTask () {
     }   else {
         taskCard.style.borderLeft = "10px solid green";
     }
+    saveToLocalStorage('toDo', toDo);
 }
 
 
@@ -78,9 +80,10 @@ function addTask () {
         let taskObject = new Task(taskTitle.value, taskDescription.value, taskPriority.value, formattedDate);
         toDo.projects[index].task.push(taskObject);
     }
+    saveToLocalStorage('toDo', toDo);
 }
 
-function createTaskCard () {
+export function createTaskCard () {
     ++toDo.projects[index].taskIndex;
     let taskCard = document.createElement("div");
     taskCard.classList.add("taskCard");
