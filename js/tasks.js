@@ -27,14 +27,7 @@ class Task {
         this.description = description;
         this.priority = priority;
         this.duedate = duedate;
-    }
-
-    deleteTask() {
-
-    }
-
-    editTask() {
-
+        this.finish = false;
     }
 }
 
@@ -103,8 +96,8 @@ function createTaskCard () {
     let taskNumber = document.querySelector(`.card-${index} > .task-container > .task-number`);
     let count = 0;
     toDo.projects[index].task.forEach(tasks => {
-        if (tasks != "") {
-            ++count
+        if ((tasks != "") && (!tasks.finish)) {
+            ++count;
         }
     })
     taskNumber.textContent = count;
@@ -112,9 +105,10 @@ function createTaskCard () {
 }
 
  export function taskCardClick (e, taskDisplay) {
-    let target = e.target.classList.value.split(" ")[0];
+    let target = e.target.classList.value.split(" ")[0];  
     projectIndex = taskDisplay.classList.value.split(" ")[1].split("-")[1];
     taskIndexes = e.target.classList.value.split(" ")[1].split("-")[1];
+    let taskCard = taskDisplay.querySelector(`.taskCard.card-${taskIndexes}`);
     switch (target) {
         case "edit":
             taskUpdate = true;
@@ -122,7 +116,6 @@ function createTaskCard () {
             break;
         
         case "remove":
-            let taskCard = taskDisplay.querySelector(`.taskCard.card-${taskIndexes}`);
             taskCard.remove();
             toDo.projects[projectIndex].task[taskIndexes] = "";
             let count = 0;
@@ -136,6 +129,23 @@ function createTaskCard () {
             break;
 
         case "done":
+            if (!toDo.projects[projectIndex].task[taskIndexes].finish) {
+                toDo.projects[projectIndex].task[taskIndexes].finish = true;
+                taskCard.style.opacity = "0.5";
+                e.target.textContent = "Undo";
+            }   else {
+                toDo.projects[projectIndex].task[taskIndexes].finish = false;
+                e.target.textContent = "Done";
+                taskCard.style.opacity = "1";
+            }
+            let projectCardTaskText = document.querySelector(`.card.card-${projectIndex} > .task-container > .task-number`);
+            let proCount = 0;
+            toDo.projects[projectIndex].task.forEach(tasks => {
+                if ((tasks != "") && (!tasks.finish)) {
+                    ++proCount;
+                }
+            })
+            projectCardTaskText.textContent = proCount;
             break;
     }
 }

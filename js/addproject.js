@@ -1,8 +1,8 @@
 import { projectUpdate } from "../src/index";
 import { viewAllProjectButton } from "../src/index";
-import { TaskButtonDialog } from "./tasks";
-import { taskCardClick } from "./tasks";
-import { taskUpdate } from "./tasks";
+import { TaskButtonDialog, taskCardClick, taskUpdate } from "./tasks";
+import { allTaskContainer } from "./taskdisplay";
+
 
 let dialog1 = document.querySelector(".project-dialog");
 let closeButton = dialog1.querySelector(".close");
@@ -11,16 +11,18 @@ export let displayScreen = document.querySelector(".display-child");
 let form1 = dialog1.querySelector(".form-1");
 let projectDescription = form1.querySelector("textarea");
 let projectTitleText = form1.querySelector("#projectName");
-let displayTitle = document.querySelector(".display-title");
+export let displayTitle = document.querySelector(".display-title");
 export let index;
 
 export let mainContainer = document.querySelector(".display");
 
 export function allProjectsDisplay () {
     displayScreen.style.display = "flex";
+    allTaskContainer.style.display = "none";
     let taskDisplay = document.querySelectorAll(".task-display");
     taskDisplay.forEach(displays => {
         displays.style.display = "none";
+    
     })
     displayTitle.textContent = "your projects";
 }

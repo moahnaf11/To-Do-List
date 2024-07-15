@@ -304,5 +304,8 @@ button:active {
     box-shadow: 0px 0px 5px 7px #52525b;
 }
 
-
+.alltasks {
+    display: none;
+    flex-wrap: wrap;
+}
 
