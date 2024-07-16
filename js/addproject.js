@@ -2,6 +2,7 @@ import { projectUpdate } from "../src/index";
 import { viewAllProjectButton } from "../src/index";
 import { TaskButtonDialog, taskCardClick, taskUpdate } from "./tasks";
 import { saveToLocalStorage } from "./storage";
+import { toDo } from "../src/index";
 
 
 
@@ -113,14 +114,11 @@ export class ToDo {
     }
 }
 
-export let toDo = new ToDo(); 
-
 export class Project {
     constructor(title, description) {
         this.title = title;
         this.description = description;
         this.task = [];
-        this.taskIndex = -1;
     }
 
 }
@@ -146,14 +144,13 @@ export function createCard () {
     let projectCard = document.createElement("div");
     projectCard.addEventListener("click", (e) => ProjectButtonClick(e, projectCard));
     projectCard.classList.add("card")
-    projectCard.classList.add(`card-${cardClass}`);
+    projectCard.classList.add(`card-${toDo.projects.length}`);
     let taskDisplay = document.createElement("div");
     taskDisplay.classList.add("task-display");
-    taskDisplay.classList.add(`project-${cardClass}`);
+    taskDisplay.classList.add(`project-${toDo.projects.length}`);
     taskDisplay.addEventListener("click", (e) => taskCardClick(e, taskDisplay));
     mainContainer.append(taskDisplay);
     taskDisplay.style.display = "none";
-    ++cardClass;
     return appendDivsInCard(projectCard)
 }
 

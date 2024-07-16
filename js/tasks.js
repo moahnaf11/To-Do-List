@@ -1,6 +1,7 @@
-import { ToDo, Project, toDo, displayDialog, closeDialog, displayScreen, taskDisplay, mainContainer, index } from "./addproject";
+import { ToDo, Project, displayDialog, closeDialog, displayScreen, taskDisplay, mainContainer, index } from "./addproject";
 import { format, parseISO, isBefore, isAfter, addMonths } from 'date-fns';
 import { saveToLocalStorage } from "./storage";
+import { toDo } from "../src/index";
 
 let addTaskButton = document.querySelector(".addtask");
 let viewAllTaskButton = document.querySelector(".viewalltask");
@@ -84,14 +85,13 @@ function addTask () {
 }
 
 export function createTaskCard () {
-    ++toDo.projects[index].taskIndex;
     let taskCard = document.createElement("div");
     taskCard.classList.add("taskCard");
-    taskCard.classList.add(`card-${toDo.projects[index].taskIndex}`);
+    taskCard.classList.add(`card-${toDo.projects[index].task.length - 1}`);
 
     let taskDisplay = document.querySelector(`.project-${index}`);
     taskDisplay.append(appendDivsToTask(taskCard));
-    let taskNumber = document.querySelector(`.card-${index} > .task-container > .task-number`);
+    let taskNumber = document.querySelector(`.card-${[index]} > .task-container > .task-number`);
     let count = 0;
     toDo.projects[index].task.forEach(tasks => {
         if ((tasks != "") && (!tasks.finish)) {
@@ -123,6 +123,7 @@ export function createTaskCard () {
             let taskText = document.querySelector(`.card.card-${projectIndex} > .task-container > .task-number`);
             taskText.textContent = count;
             })
+            saveToLocalStorage("toDo", toDo);
             break;
 
         case "done":
@@ -143,6 +144,7 @@ export function createTaskCard () {
                 }
             })
             projectCardTaskText.textContent = proCount;
+            saveToLocalStorage("toDo", toDo);
             break;
     }
 }
@@ -150,33 +152,33 @@ export function createTaskCard () {
 function appendDivsToTask (taskCard) {
     let taskTitleContainer = document.createElement("h1");
     taskTitleContainer.classList.add("title-container");
-    taskTitleContainer.textContent = toDo.projects[index].task[toDo.projects[index].taskIndex].title;
+    taskTitleContainer.textContent = toDo.projects[index].task[toDo.projects[index].task.length - 1].title;
     let taskDescriptionContainer = document.createElement("div");
     taskDescriptionContainer.classList.add("description-container");
-    taskDescriptionContainer.textContent = toDo.projects[index].task[toDo.projects[index].taskIndex].description;
+    taskDescriptionContainer.textContent = toDo.projects[index].task[toDo.projects[index].task.length - 1].description;
     let taskDateContainer = document.createElement("div");
     taskDateContainer.classList.add("date-container");
-    taskDateContainer.textContent = toDo.projects[index].task[toDo.projects[index].taskIndex].duedate;
+    taskDateContainer.textContent = toDo.projects[index].task[toDo.projects[index].task.length - 1].duedate;
     let buttonContainer = document.createElement("div");
     buttonContainer.classList.add("taskcardbuttons");
     let editButton = document.createElement("button");
     let removeButton = document.createElement("button");
     let doneButton = document.createElement("button");
     doneButton.classList.add("done");
-    doneButton.classList.add(`button-${toDo.projects[index].taskIndex}`);
+    doneButton.classList.add(`button-${toDo.projects[index].task.length - 1}`);
     doneButton.textContent = "done";
     editButton.classList.add("edit");
-    editButton.classList.add(`button-${toDo.projects[index].taskIndex}`);
+    editButton.classList.add(`button-${toDo.projects[index].task.length - 1}`);
     removeButton.classList.add("remove");
-    removeButton.classList.add(`button-${toDo.projects[index].taskIndex}`);
+    removeButton.classList.add(`button-${toDo.projects[index].task.length - 1}`);
     editButton.textContent = "edit";
     removeButton.textContent = "x";
 
     buttonContainer.append(editButton, removeButton, doneButton);
     taskCard.append(taskTitleContainer, taskDescriptionContainer, taskDateContainer, buttonContainer);
-    if (toDo.projects[index].task[toDo.projects[index].taskIndex].priority === "High") {
+    if (toDo.projects[index].task[toDo.projects[index].task.length - 1].priority === "High") {
         taskCard.style.borderLeft = "10px solid red";
-    }   else if (toDo.projects[index].task[toDo.projects[index].taskIndex].priority === "Medium") {
+    }   else if (toDo.projects[index].task[toDo.projects[index].task.length - 1].priority === "Medium") {
         taskCard.style.borderLeft = "10px solid orange";
     }   else {
         taskCard.style.borderLeft = "10px solid green";

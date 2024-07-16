@@ -1,5 +1,6 @@
-import { toDo, mainContainer, displayScreen, displayTitle } from "./addproject";
+import { mainContainer, displayScreen, displayTitle } from "./addproject";
 import { format, parseISO, isThisMonth, parse } from 'date-fns';
+import { toDo } from "../src/index";
 
 
 let allTaskContainer = document.createElement("div");
@@ -15,15 +16,17 @@ mainContainer.appendChild(thisMonthContainer);
 export function allTaskDisplay() {
     allTaskContainer.innerHTML = "";
     toDo.projects.forEach((project, projectIndex) => {
-        project.task.forEach((tasks, taskIndex) => {
-            if ((!tasks.finish) && (!tasks == "")) {
-                let taskCard = document.querySelector(`.project-${projectIndex} > .card-${taskIndex}`);
-                let taskCardClone = taskCard.cloneNode(true);
-                let buttonContainer = taskCardClone.querySelector(".taskcardbuttons");
-                taskCardClone.removeChild(buttonContainer);
-                allTaskContainer.appendChild(taskCardClone);
-            }
-        })
+        if (project) {
+            project.task.forEach((tasks, taskIndex) => {
+                if ((!tasks.finish) && (!tasks == "")) {
+                    let taskCard = document.querySelector(`.task-display.project-${projectIndex} > .card-${taskIndex}`);
+                    let taskCardClone = taskCard.cloneNode(true);
+                    let buttonContainer = taskCardClone.querySelector(".taskcardbuttons");
+                    taskCardClone.removeChild(buttonContainer);
+                    allTaskContainer.appendChild(taskCardClone);
+                }
+            })
+        }
     })
     let taskDisplays = mainContainer.querySelectorAll(".task-display");
     taskDisplays.forEach(displays => {
@@ -40,18 +43,20 @@ export function allTaskDisplay() {
 export function showthisMonthTasks () {
     thisMonthContainer.innerHTML = "";
     toDo.projects.forEach((project, projectIndex) => {
-        project.task.forEach((tasks, taskIndex) => {
-            if ((!tasks.finish) && (!tasks == "")) {
-                let dueDate = parseDateString(tasks.duedate);
-                if (isThisMonth(dueDate)) {
-                    let taskCard = document.querySelector(`.project-${projectIndex} > .card-${taskIndex}`);
-                    let taskCardClone = taskCard.cloneNode(true);
-                    let buttonContainer = taskCardClone.querySelector(".taskcardbuttons");
-                    taskCardClone.removeChild(buttonContainer);
-                    thisMonthContainer.appendChild(taskCardClone);
+        if (project) {
+            project.task.forEach((tasks, taskIndex) => {
+                if ((!tasks.finish) && (!tasks == "")) {
+                    let dueDate = parseDateString(tasks.duedate);
+                    if (isThisMonth(dueDate)) {
+                        let taskCard = document.querySelector(`.project-${projectIndex} > .card-${taskIndex}`);
+                        let taskCardClone = taskCard.cloneNode(true);
+                        let buttonContainer = taskCardClone.querySelector(".taskcardbuttons");
+                        taskCardClone.removeChild(buttonContainer);
+                        thisMonthContainer.appendChild(taskCardClone);
+                    }
                 }
-            }
-        })
+            })
+        }
         thisMonthContainer.style.display = "flex";
         displayScreen.style.display = "none";
         allTaskContainer.style.display = "none";

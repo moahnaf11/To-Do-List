@@ -1,5 +1,5 @@
 import "./style.css";
-import { displayDialog, toDo } from "../js/addproject";
+import { displayDialog } from "../js/addproject";
 import { TaskButtonDialog } from "../js/tasks";
 import { allProjectsDisplay } from "../js/addproject";
 import { allTaskDisplay } from "../js/taskdisplay";
@@ -12,6 +12,7 @@ import { createTaskCard } from "../js/tasks";
 import { cardClass } from "../js/addproject";
 import { mainContainer } from "../js/addproject";
 import { ProjectButtonClick } from "../js/addproject";
+import { taskCardClick } from "../js/tasks";
 
 export let projectUpdate;
 let dialog1 = document.querySelector(".project-dialog");
@@ -37,27 +38,27 @@ allTaskButton.addEventListener("click", allTaskDisplay);
 
 thisMonthbutton.addEventListener("click", showthisMonthTasks);
 
-export let boDo = new ToDo();
+export let toDo = new ToDo();
+
 
 window.addEventListener("load", () => {
     const storedToDo = loadFromLocalStorage('toDo');
     if (storedToDo) {
-        boDo = Object.assign(new ToDo(), storedToDo);
+        toDo = Object.assign(new ToDo(), storedToDo);
         // Render the stored projects and tasks
-        boDo.projects.forEach((project, projectIndex) => {
+        toDo.projects.forEach((project, projectIndex) => {
             if (project) {
                 // Create and append project card
                 let projectCard = document.createElement("div");
                 projectCard.addEventListener("click", (e) => ProjectButtonClick(e, projectCard));
                 projectCard.classList.add("card")
-                projectCard.classList.add(`card-${cardClass}`);
+                projectCard.classList.add(`card-${projectIndex}`);
                 let taskDisplay = document.createElement("div");
                 taskDisplay.classList.add("task-display");
-                taskDisplay.classList.add(`project-${cardClass}`);
+                taskDisplay.classList.add(`project-${projectIndex}`);
                 taskDisplay.addEventListener("click", (e) => taskCardClick(e, taskDisplay));
                 mainContainer.append(taskDisplay);
                 taskDisplay.style.display = "none";
-                ++cardClass;
 
 
                 let titleDiv = document.createElement("h1");
@@ -69,7 +70,13 @@ window.addEventListener("load", () => {
                 taskLabel.textContent = "Tasks:"
                 let taskNumber = document.createElement("div");
                 taskNumber.classList.add("task-number");
-                taskNumber.textContent = project.task.length;
+                let count = 0;
+                toDo.projects[projectIndex].task.forEach(tasks => {
+                    if ((tasks != "") && (!tasks.finish)) {
+                        ++count;
+                    }
+                })
+                taskNumber.textContent = count;
                 taskContainer.append(taskLabel, taskNumber);
                 let cardButtonContainer = document.createElement("div");
                 cardButtonContainer.classList.add("button-container");
@@ -111,7 +118,56 @@ window.addEventListener("load", () => {
                 project.task.forEach((task, taskIndex) => {
                     if (task) {
                         // Create and append task card
-                        const taskCard = createTaskCard();
+                        let taskCard = document.createElement("div");
+                        taskCard.classList.add("taskCard");
+                        taskCard.classList.add(`card-${taskIndex}`);
+
+                        let taskDisplays = document.querySelector(`.project-${projectIndex}`);
+                        
+                        let taskTitleContainer = document.createElement("h1");
+                        taskTitleContainer.classList.add("title-container");
+                        taskTitleContainer.textContent = toDo.projects[projectIndex].task[taskIndex].title;
+                        let taskDescriptionContainer = document.createElement("div");
+                        taskDescriptionContainer.classList.add("description-container");
+                        taskDescriptionContainer.textContent = toDo.projects[projectIndex].task[taskIndex].description;
+                        let taskDateContainer = document.createElement("div");
+                        taskDateContainer.classList.add("date-container");
+                        taskDateContainer.textContent = toDo.projects[projectIndex].task[taskIndex].duedate;
+                        let buttonContainer = document.createElement("div");
+                        buttonContainer.classList.add("taskcardbuttons");
+                        let editButton = document.createElement("button");
+                        let removeButton = document.createElement("button");
+                        let doneButton = document.createElement("button");
+                        doneButton.classList.add("done");
+                        doneButton.classList.add(`button-${taskIndex}`);
+                        doneButton.textContent = "done";
+                        editButton.classList.add("edit");
+                        editButton.classList.add(`button-${taskIndex}`);
+                        removeButton.classList.add("remove");
+                        removeButton.classList.add(`button-${taskIndex}`);
+                        editButton.textContent = "edit";
+                        removeButton.textContent = "x";
+
+                        buttonContainer.append(editButton, removeButton, doneButton);
+                        taskCard.append(taskTitleContainer, taskDescriptionContainer, taskDateContainer, buttonContainer);
+                        if (toDo.projects[projectIndex].task[taskIndex].priority === "High") {
+                            taskCard.style.borderLeft = "10px solid red";
+                        }   else if (toDo.projects[projectIndex].task[taskIndex].priority === "Medium") {
+                            taskCard.style.borderLeft = "10px solid orange";
+                        }   else {
+                            taskCard.style.borderLeft = "10px solid green";
+                        }
+                        taskDisplays.appendChild(taskCard);
+
+
+                        let taskNumber = document.querySelector(`.card-${projectIndex} > .task-container > .task-number`);
+                        let count = 0;
+                        toDo.projects[projectIndex].task.forEach(tasks => {
+                            if ((tasks != "") && (!tasks.finish)) {
+                                ++count;
+                            }
+                        })
+                        taskNumber.textContent = count;
                         // Update task card with stored task data
                         // ... Update card contents with task details ...
                         const taskDisplay = document.querySelector(`.project-${projectIndex}`);

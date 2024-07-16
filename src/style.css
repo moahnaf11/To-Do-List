@@ -29,6 +29,12 @@ body {
     text-align: center;
 }
 
+.project, .tasks {
+    border: 2px solid black;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
 div.sidebar {
     display: grid;
     box-sizing: border-box;
